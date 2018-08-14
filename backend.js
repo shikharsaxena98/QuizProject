@@ -2,11 +2,23 @@ var fs = require('fs');
 var questions=require('./question.json');
 var express=require('express');
 var bodyParser = require('body-parser');
-
+var logger = require('morgan');
+var session = require('express-session');
+var Grant = require('grant-express');
+var grant = new Grant(require('./config.json'));
 
 var app=express();
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json('application/json'));
+
+
+app.use(logger('dev'))
+// REQUIRED:
+app.use(session({secret:'123'}))
+// mount grant
+app.use(grant)
+
 
 
 var questionsMod=JSON.stringify(createQuestionsForUser(questions));

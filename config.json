@@ -1,0 +1,25 @@
+{
+    "server": {
+        "protocol": "http",
+        "host": "dummy.com:3000"
+    },
+    "quiz": {
+        "key": "[KEY]",
+        "secret": "very secret",
+        "callback": "/handle_quiz_callback"
+    },
+    "facebook": {
+        "key": "[APP_ID]",
+        "secret": "very secret",
+        "callback": "/handle_facebook_callback",
+        "scope": [
+      "user_groups",
+      "user_likes"
+    ]
+    },
+    "twitter": {
+        "key": "[CONSUMER_KEY]",
+        "secret": "very secret",
+        "callback": "/handle_twitter_callback"
+    }
+}
