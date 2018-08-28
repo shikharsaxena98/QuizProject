@@ -3,38 +3,47 @@
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="startPageJS.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="17507716439-0tkjkd8if9lh5970j08vv0rpf333nbkd.apps.googleusercontent.com">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+
     <style>
         .container {
             margin-top: 100px;
         }
 
-        input[type=text],
-        input[type=number],
-        input[type=email] {
+        input,
+        input,
+        input{
             padding: 10px 10px;
             border: 1px solid black;
             border-radius: 5px;
             margin: 10px 10px;
         }
-
     </style>
 </head>
 
 <body>
     <div class="container"></div>
 
-    <div class="col-md-12   text-center">
+    <div class="col-md-12 col-sm-12  card text-center" style="background-color: #ad00fa" style="width: 50%">
         <form>
-            <input type="text" id="UserName" placeholder="Your Name" style="width: 300px">
+            <input id="UserName" placeholder="Your Name" style="width: 300px">
             <br/>
-            <input type="number" id="UserMobile" placeholder="Mobile Number with Country Code" style="width: 300px">
             <br/>
-            <input type="email" id="email" placeholder="Your Email ID" style="width: 305px">
-            <br/><br/>
-            <a href="frontend.html">
-                <button id="Start" onclick="getData()" class="btn btn-primary" >Start the Quiz</button>
-            </a>
+            <input id="email" placeholder="Your Email ID" style="width: 305px">
+            <br/>
+            <br/>
+            <button type="button" id="Start" class="btn btn-primary" >Start the Quiz</button>
         </form>
+        <div class="col-md-12 center">
+            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+        </div>
+        <div class="data">
+            <p>Profile Details</p>
+        </div>
+        <a href="#" onclick="signOut();">Sign out</a>
 
     </div>
 </body>

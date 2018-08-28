@@ -9,8 +9,8 @@
         "callback": "/handle_quiz_callback"
     },
     "facebook": {
-        "key": "[APP_ID]",
-        "secret": "very secret",
+        "key": "837166323149678",
+        "secret": "84bfb9d49ec42d9020f18d0bd023d8d2",
         "callback": "/handle_facebook_callback",
         "scope": [
       "user_groups",

@@ -151,7 +151,8 @@ function saveToLocalStorage(alreadyAsked, timeArray, ansArray) {
     //console.log(dataArr);
     dataArr = JSON.parse(dataArr);
     var reqdElm = dataArr[dataArr.length - 1];
-    reqdElm = JSON.parse(reqdElm);
+    console.log(typeof reqdElm);
+    //reqdElm = JSON.parse(reqdElm);
     //console.log(reqdElm);
     reqdElm["UserStats"] =finalArr;
     //console.log(reqdElm);
@@ -165,7 +166,7 @@ function sendDataForEvaluation(){
     var currData=data[data.length-1];
     
     var xhr=new XMLHttpRequest();
-    xhr.open("POST", "http://localhost:3000");
+    xhr.open("POST", "https://localhost:3000/eval");
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(JSON.stringify(currData));
     
@@ -213,7 +214,7 @@ window.onload = function () {
         }
         saveToLocalStorage(alreadyAsked, timeArray, ansArray);
         sendDataForEvaluation();
-
+        window.location.href="https://localhost:3000";
     }
 
 
@@ -235,3 +236,5 @@ window.onload = function () {
 
     }
 }//Window.onload END
+
+

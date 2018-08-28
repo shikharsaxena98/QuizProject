@@ -5,31 +5,33 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <script src="frontend.js"></script>
+    <script>
+        window.onbeforeunload = function() {
+            return "Do you want to leave?";
+        }
+
+    </script>
 
 </head>
 
 <body>
     <p id="demo"></p>
     <div id="startTest">
-        <button id="move" >Submit This Answer</button>
+        <button id="move" class="btn btn-primary">Submit This Answer</button>
         <br/>
         <br/>
         <br/>
-        <button id="submit">Submit Quiz</button>
+        <button id="submit" class="btn btn-danger">Submit Quiz</button>
     </div>
 
     <div id="barra" class="progress">
-        <div id="bar" class="progress-bar" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100" style="width:1%">
+        <div id="bar" class="progress-bar" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100" style="width:0%">
         </div>
     </div>
-    <div id="quiz"></div>   
+    <div id="quiz"></div>
     <br/>
     <br/>
     <br/>
-    
-    
-
-
 </body>
 
 </html>
