@@ -25,7 +25,7 @@ function getData() {
 
 function onSignIn(googleUser) {
     var profile = googleUser.getBasicProfile();
-        var newUser = {};
+    var newUser = {};
     var obj = {};
     obj["username"] = profile.getName();
     //obj["UserMobile"]=document.getElementById("UserMobile").value;
@@ -34,7 +34,7 @@ function onSignIn(googleUser) {
     var users = [];
     users = JSON.parse(localStorage.getItem("Users"));
 
-    
+
     users.push(JSON.stringify(newUser));
     localStorage.setItem("Users", JSON.stringify(users));
     //window.location.href = "https://localhost:3000/quizPage";
@@ -47,12 +47,10 @@ function signOut() {
     });
 }
 
-function 
-
 window.onload = function () {
     var submitButton = document.getElementById("Start");
-    submitButton.onclick = function () {
+    var confirmSubmitButtonModal=document.getElementById("confirmStartQuiz");
+    confirmSubmitButtonModal.onclick = function () {
         getData();
     }
 }
-

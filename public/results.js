@@ -11,11 +11,11 @@ function fetchData() {
 function completeSelectionBar(arr, selectionBar) {
     if (arr != null) {
         console.log("Selection Bar Fill Up");
-        console.log(arr);
+        //  console.log(arr);
         var nameArr = [];
         for (var i = 0; i < arr.length; i++) {
             var person = arr[i];
-            if (person.UserStats !== null) {
+            if (person.UserStats !== undefined) {
                 selectionBar.innerHTML += "<option value=" + i + ">" + person.UserCredentials.username + "</option>";
             }
         }
@@ -30,18 +30,19 @@ function getSelectedId(selectionBar) {
 }
 
 function fetchData() {
-    var data;
+    var data="";
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://localhost:3000/getDatabase');
-    xhr.send();
-
-    xhr.onreadystatechange = function () {
-        data = xhr.responseText;
-        console.log(data);
-        data=JSON.parse(data);
-    }
+    xhr.open('GET', '/getDatabase',true);
     
-    return data;
+    xhr.onload = function () {
+        data = xhr.responseText;
+        //console.log(data);
+        //console.log(typeof data);
+    }
+    xhr.send(null);
+
+    
+    return JSON.parse(data);
 }
 
 function showData(arr, i, tableContainer) {
@@ -59,10 +60,11 @@ window.onload = function () {
     var arr = [];
     var selectionBar = document.getElementById("ids");
     var tableContainer = document.getElementById("bodyOfTable");
-    var submitButton = document.getElementById("submit")
+    var submitButton = document.getElementById("submit");   
     var selectedId;
 
     arr = fetchData();
+    console.log("arr is "+arr);
     completeSelectionBar(arr, selectionBar);
 
     submitButton.onclick = function () {

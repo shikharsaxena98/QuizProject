@@ -7,9 +7,15 @@ var session = require('express-session');
 var Grant = require('grant-express');
 var grant = new Grant(require('./config.json'));
 var https = require('https');
-var app = express();
 var parseurl = require('parseurl');
 var httpsPort = 3000;
+var passport = require('passport');
+var Strategy = require('passport-local').Strategy;
+var db=require('./db');
+var app = express();
+var ensureLoggedIn=require('connect-ensure-login').ensureLoggedIn;
+
+
 
 app.use(bodyParser.urlencoded({
     extended: false
@@ -20,6 +26,7 @@ var options = {
     key: fs.readFileSync('./https Certificates/key.pem', 'utf8'),
     cert: fs.readFileSync('./https Certificates/server.crt', 'utf8')
 };
+
 
 app.use(logger('dev'));
 
@@ -43,7 +50,7 @@ app.use(function (req, res, next) {
     req.session.views[pathname] = (req.session.views[pathname] || 0) + 1;
 
     next();
-})
+});
 
 var questionsMod = JSON.stringify(createQuestionsForUser(questions));
 
@@ -52,6 +59,30 @@ fs.writeFile('./public/questions.json', questionsMod, 'utf-8', function (err) {
 });
 
 app.use(express.static('public'));
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new Strategy(
+  function(username, password, cb) {
+    db.admins.findByUsername(username, function(err, user) {
+      if (err) { return cb(err); }
+      if (!user) { return cb(null, false); }
+      if (user.password != password) { return cb(null, false); }
+      return cb(null, user);
+    });
+  }));
+
+passport.serializeUser(function(user, cb) {
+  cb(null, user.id);
+});
+
+passport.deserializeUser(function(id, cb) {
+  db.admins.findById(id, function (err, user) {
+    if (err) { return cb(err); }
+    cb(null, user);
+  });
+});
+
 
 app.get('/', function (req, res) {
     //res.write("Hello"); 
@@ -62,7 +93,15 @@ app.get('/quizPage', function (req, res) {
     res.sendFile(__dirname + '/public/frontend.html')
 });
 
-app.use('/results', function (request, response) {
+app.get('/login',function(req,res){
+    res.sendFile(__dirname+'/public/login.html')
+});
+
+app.post('/login',passport.authenticate('local', {/*successReturnToOrRedirect:'/results',*/ failureRedirect: '/login' }),function(req,res){
+    res.redirect('/results');
+});
+
+app.get('/results',require('connect-ensure-login').ensureLoggedIn(),function (request, response) {
     //var data=fs.readFileSync('database.json');
     //res.send(data);
     response.sendFile(__dirname + '/public/results.html');
@@ -72,7 +111,7 @@ app.use('/results', function (request, response) {
 app.post('/eval', function (request, response) {
     response.writeHead(200);
     var data=request.body;
-    var fullArr=fs.readFileSync('database.json',function(err,data){
+    var fullArr=fs.readFileSync('db/database.json',function(err,data){
         if(err){
             console.error(err);
         }
@@ -82,21 +121,11 @@ app.post('/eval', function (request, response) {
     fullArr=JSON.parse(fullArr);
     fullArr.push(data);
     fullArr=JSON.stringify(fullArr);
-    fs.writeFile('database.json',fullArr,'utf-8',function(err){
+    fs.writeFile('db/database.json',fullArr,'utf-8',function(err){
         if(err){
             console.error(err);
         }
     });
-    /*
-    var userCreds=request.body.UserCredentials;
-    console.log(typeof userCreds);
-    userCreds=JSON.stringify(userCreds);
-    fs.appendFile('database.json',userCreds,'utf-8',function(err){
-        if(err){
-            console.log(err);
-        }
-    });
-    */
     var dataForEval = request.body.UserStats;
     var marks = evalMarks(dataForEval, questions);
     response.write(marks.toString());
@@ -132,7 +161,7 @@ secureServer.listen(httpsPort, function () {
 });
 
 app.get('/getDatabase',function(req,res){
-    var data=fs.readFileSync('database.json','utf-8');
+    var data=fs.readFileSync('db/database.json','utf-8');
     console.log(data);
     res.send(data);
-})
+});

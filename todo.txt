@@ -1,9 +1,8 @@
-+ Create Time Array
 + Make Submit Quiz Functional
 + Create page to view results
 + User Details on Front Page
 + fix randomNo.
 + Save data in LocalStorage
-- Serving Static Files using Express
-- Save from LocalStroage to FileSystem
++ Serving Static Files using Express
++ Save from LocalStroage to FileSystem
 
