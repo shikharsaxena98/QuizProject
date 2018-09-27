@@ -10,14 +10,12 @@ function fetchData() {
 */
 function completeSelectionBar(arr, selectionBar) {
     if (arr != null) {
-        //console.log("Selection Bar Fill Up");
-        //console.log(arr.length);
-        //var nameArr = [];// not used
-        //console.log('starting for loop');
+        console.log("Selection Bar Fill Up");
+        //  console.log(arr);
+        var nameArr = [];
         for (var i = 0; i < arr.length; i++) {
             var person = arr[i];
             if (person.UserStats !== undefined) {
-                //console.log('filling selectionbar');
                 selectionBar.innerHTML += "<option value=" + i + ">" + person.UserCredentials.username + "</option>";
             }
         }
@@ -31,25 +29,31 @@ function getSelectedId(selectionBar) {
     return id;
 }
 
-var data = ""; // global variable to contain fetchedata, to be used in showData
 function fetchData(selectionBar) {
-    //Get the data from Backend
+    var data = "";
     var xhr = new XMLHttpRequest();
     xhr.open('GET', '/getDatabase', true);
-    xhr.send(null);
 
     xhr.onload = function () {
         data = xhr.responseText;
-        completeSelectionBar(JSON.parse(data), selectionBar);
-    }
-    
-}
+        console.log(data);
+        console.log(typeof data);
 
+
+        var arr = [];
+        arr = JSON.parse(data);
+        console.log("Data Parsed to Array");
+        completeSelectionBar(arr, selectionBar);
+
+    }
+    xhr.send(null);
+
+}
 
 function showData(arr, i, tableContainer) {
     console.log("Show Data");
     var person = arr[i];
-    console.log(person.UserStats);
+    //console.log(person.UserStats);
     var QuesArr = person.UserStats;
 
     for (var i = 0; i < person.UserStats.length; i++) {
@@ -64,14 +68,13 @@ window.onload = function () {
     var submitButton = document.getElementById("submit");
     var selectedId;
 
-    fetchData(selectionBar);
-    //console.log("arr is "+arr);
-    //completeSelectionBar(, selectionBar);
+    arr = fetchData(selectionBar);
+    console.log("arr is " + arr);
 
     submitButton.onclick = function () {
         tableContainer.innerHTML = "";
         selectedId = getSelectedId(selectionBar);
-        showData(JSON.parse(data), selectedId, tableContainer);
+        showData(arr, selectedId, tableContainer);
     }
 
 }

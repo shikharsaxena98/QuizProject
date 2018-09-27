@@ -168,9 +168,15 @@ function sendDataForEvaluation(){
     var xhr=new XMLHttpRequest();
     xhr.open("POST", "https://localhost:3000/eval");
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    //xhr.responseType= "document"
     xhr.send(JSON.stringify(currData));
-    
-    
+    //xhr.responseType="document";
+    xhr.onload=function(){
+        console.log(xhr);
+        
+        window.location.replace(JSON.parse(xhr.response).redirectUrl);
+    }
+    //
 }
 
 window.onload = function () {
@@ -214,7 +220,8 @@ window.onload = function () {
         }
         saveToLocalStorage(alreadyAsked, timeArray, ansArray);
         sendDataForEvaluation();
-        window.location.href="https://localhost:3000";
+        //window.location.href="https://localhost:3000";
+        //window.location.replace('/');
     }
 
 

@@ -23,8 +23,8 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json('application/json'));
 
 var options = {
-    key: fs.readFileSync('./https Certificates/key.pem', 'utf8'),
-    cert: fs.readFileSync('./https Certificates/server.crt', 'utf8')
+    key: fs.readFileSync('./httpsCertificates/key.pem', 'utf8'),
+    cert: fs.readFileSync('./httpsCertificates/server.crt', 'utf8')
 };
 
 
@@ -86,18 +86,26 @@ passport.deserializeUser(function(id, cb) {
 
 app.get('/', function (req, res) {
     //res.write("Hello"); 
-    res.sendFile(__dirname + '/public/startQuizPage.html')
+    res.sendFile(__dirname + '/public/startQuizPage.html');
 });
 
 app.get('/quizPage', function (req, res) {
     res.sendFile(__dirname + '/public/frontend.html')
 });
 
-app.get('/login',function(req,res){
+app.get('/login',function(req,res) {
     res.sendFile(__dirname+'/public/login.html')
 });
 
-app.post('/login',passport.authenticate('local', {/*successReturnToOrRedirect:'/results',*/ failureRedirect: '/login' }),function(req,res){
+app.get('/exm',function(req,res){
+    //res.writeHead(302);
+    res.set({'Content-Type': 'text/plain'});
+    
+    res.set({'Document-Type': 'text/plain'});
+    res.status(302).send('Hello')
+})
+
+app.post('/login',passport.authenticate('local', {/*successReturnToOrRedirect:'/results',*/ failureRedirect: '/login' }),function(req,res) {
     res.redirect('/results');
 });
 
@@ -107,17 +115,23 @@ app.get('/results',require('connect-ensure-login').ensureLoggedIn(),function (re
     response.sendFile(__dirname + '/public/results.html');
     
 });
+/*
+
+app.get('/eval',function(req,res){
+//res.sendFile(__dirname + '/public/results.html') ;
+    res.send('check')
+});
+*/
 
 app.post('/eval', function (request, response) {
-    response.writeHead(200);
+    //response.writeHead(200);
     var data=request.body;
     var fullArr=fs.readFileSync('db/database.json',function(err,data){
         if(err){
             console.error(err);
         }
-        
     });
-    
+
     fullArr=JSON.parse(fullArr);
     fullArr.push(data);
     fullArr=JSON.stringify(fullArr);
@@ -128,7 +142,14 @@ app.post('/eval', function (request, response) {
     });
     var dataForEval = request.body.UserStats;
     var marks = evalMarks(dataForEval, questions);
-    response.write(marks.toString());
+    console.log(marks);
+    
+    request.logout();
+    request.session.destroy();
+    response.send({err:0, redirectUrl:'/'});
+    
+    //response.redirect('/exm');
+    //response.sendFile(__dirname + '/public/startQuizPage.html');
 });
 
 function createQuestionsForUser(questions) {
