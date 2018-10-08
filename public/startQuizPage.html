@@ -3,7 +3,7 @@
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="startPageJS.js"></script>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://apis.google.com/js/platform.js"></script>
     <meta name="google-signin-client_id" content="17507716439-0tkjkd8if9lh5970j08vv0rpf333nbkd.apps.googleusercontent.com">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
@@ -32,22 +32,34 @@
             background-color: rgba(245, 245, 245, 1);
             opacity: 1;
         }
+        
+    #gSignIn {
+    width: 640px; /*can be in percentage also.*/
+    height: auto;
+    margin: 0 auto;
+    padding: 10px;
+    position: relative;
+}
 
     </style>
+
 </head>
 
 <body style="background-color: #659DBD">
-    <div class="container" >
+    <div class="container">
 
         <div class="col-md-12 col-sm-12  card special-card text-center" style=s tyle="width: 50%">
             <form>
                 <input id="UserName" placeholder="Your Name" style="width: 300px">
-                <br/>
-                <br/>
+                <br />
+                <br />
                 <input id="email" placeholder="Your Email ID" style="width: 305px">
-                <br/>
-                <br/>
+                <br />
+                <br />
                 <button type="button" id="Start" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Start the Quiz</button>
+
+                <div id="gSignIn" class="g-signin2" data-onsuccess="onSignIn"></div>
+
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -55,9 +67,9 @@
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Start Quiz</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          
+
                                     <span aria-hidden="true">&times;</span>
-        
+
                                 </button>
                             </div>
                             <div class="modal-body">
@@ -70,16 +82,9 @@
                         </div>
                     </div>
                 </div>
+                <!--Modal End-->
             </form>
-            <!--
-            <div class="col-md-12 center">
-                <div class="g-signin2" data-onsuccess="onSignIn"></div>
-            </div>
-            <div class="data">
-                <p>Profile Details</p>
-            </div>
             <a href="#" onclick="signOut();">Sign out</a>
-             -->
         </div>
     </div>
 </body>

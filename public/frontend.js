@@ -63,6 +63,13 @@ function displayQuestion(quizContainer, questions, alreadyAsked, questionNo) {
 
 }
 
+function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+        console.log('User signed out.');
+    });
+}
+
 function generateRandomNo(alreadyAsked, questions) {
     //Creates a Random Question No. and checks that the Question hasnt beeen asked before
     if (alreadyAsked.length < questions.length) {
@@ -164,19 +171,22 @@ function saveToLocalStorage(alreadyAsked, timeArray, ansArray) {
 function sendDataForEvaluation(){
     var data=JSON.parse(localStorage.getItem('Users'));
     var currData=data[data.length-1];
+    console.log(currData);
+    console.log(JSON.stringify(currData));
+    var sudoObj={UserCredentials:{userName:'Shikhar Saxena',email:'shikharsaxena8@gmail.com'}}
+    
     
     var xhr=new XMLHttpRequest();
     xhr.open("POST", "https://localhost:3000/eval");
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     //xhr.responseType= "document"
-    xhr.send(JSON.stringify(currData));
+    xhr.send(currData);
     //xhr.responseType="document";
     xhr.onload=function(){
-        console.log(xhr);
-        
-        window.location.replace(JSON.parse(xhr.response).redirectUrl);
+        //console.log(xhr.responseText);
+        window.location=JSON.parse(xhr.response).redirectUrl;
     }
-    //
+    
 }
 
 window.onload = function () {
@@ -200,8 +210,8 @@ window.onload = function () {
                 c: '10'
             },
             correctAnswer: 'c'
-	}
-];
+	    }
+    ];
     var questionNo = generateRandomNo(alreadyAsked, myQuestions);
     var quizContainer = document.getElementById('quiz');
     var resultsContainer = document.getElementById('results');
@@ -219,9 +229,8 @@ window.onload = function () {
             timeArray[i] = timeArray[i] - timeArray[i - 1];
         }
         saveToLocalStorage(alreadyAsked, timeArray, ansArray);
+        
         sendDataForEvaluation();
-        //window.location.href="https://localhost:3000";
-        //window.location.replace('/');
     }
 
 

@@ -1,13 +1,22 @@
+var isAuthorized;
+
 function getData() {
     if (localStorage.getItem("Users") === null) {
         var arr = new Array();
         localStorage.setItem("Users", JSON.stringify(arr));
     }
     var newUser = {};
-    var obj = {};
-    obj["username"] = document.getElementById("UserName").value;
-    //obj["UserMobile"]=document.getElementById("UserMobile").value;
-    obj["email"] = document.getElementById("email").value;
+    var obj = {
+        'username': '',
+        'email': ''
+    };
+    if (document.getElementById("UserName").value != null) {
+        obj["username"] = document.getElementById("UserName").value;
+    }
+    if (document.getElementById("UserName").value != null) {
+        obj["email"] = document.getElementById("email").value;
+    }
+
     newUser["UserCredentials"] = obj;
     var users = [];
     users = JSON.parse(localStorage.getItem("Users"));
@@ -24,6 +33,7 @@ function getData() {
 }
 
 function onSignIn(googleUser) {
+    console.log('Signed in.');
     var profile = googleUser.getBasicProfile();
     var newUser = {};
     var obj = {};
@@ -31,13 +41,17 @@ function onSignIn(googleUser) {
     //obj["UserMobile"]=document.getElementById("UserMobile").value;
     obj["email"] = profile.getEmail();
     newUser["UserCredentials"] = obj;
+
     var users = [];
-    users = JSON.parse(localStorage.getItem("Users"));
+    if (localStorage.getItem("Users") != null) {
+        users = JSON.parse(localStorage.getItem("Users"));
+    }
 
 
     users.push(JSON.stringify(newUser));
     localStorage.setItem("Users", JSON.stringify(users));
-    //window.location.href = "https://localhost:3000/quizPage";
+    signOut();
+    window.location.href = "https://localhost:3000/quizPage";
 }
 
 function signOut() {
@@ -46,10 +60,15 @@ function signOut() {
         console.log('User signed out.');
     });
 }
-
+function checkLogIn() {
+    var GoogleAuth = gapi.auth2.getAuthInstance();
+    if (GoogleAuth.isSignedIn.Aia.value) {
+        signOut();
+    }
+}
 window.onload = function () {
     var submitButton = document.getElementById("Start");
-    var confirmSubmitButtonModal=document.getElementById("confirmStartQuiz");
+    var confirmSubmitButtonModal = document.getElementById("confirmStartQuiz");
     confirmSubmitButtonModal.onclick = function () {
         getData();
     }
