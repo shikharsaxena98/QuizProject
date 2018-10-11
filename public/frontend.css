@@ -1,3 +1,8 @@
+
+body {
+    padding: 50px;
+}
+
 #quiz {
     background-color: darkgray;
 }
@@ -44,12 +49,12 @@ body {
 }
 
 #myProgress {
-  width: 100%;
-  background-color: #ddd;
+    width: 100%;
+    background-color: #ddd;
 }
 
 #myBar {
-  width: 0%;
-  height: 30px;
-  background-color: #4CAF50;
+    width: 0%;
+    height: 30px;
+    background-color: #4CAF50;
 }

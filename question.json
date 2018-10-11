@@ -14,4 +14,12 @@
         "c": "10"
     },
     "correctAnswer": "c"
+}, {
+    "question": "What is 30/3?",
+    "answers": {
+        "a": "3",
+        "b": "5",
+        "c": "10"
+    },
+    "correctAnswer": "c"
 }]

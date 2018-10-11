@@ -1,3 +1,4 @@
+process.env.NODE_ENV="development";
 var fs = require('fs');
 var questions = require('./question.json');
 var express = require('express');
@@ -14,20 +15,13 @@ var Strategy = require('passport-local').Strategy;
 var db = require('./db');
 var app = express();
 var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
-var config=require('./config/config.js');
-console.log(config)
+var config = require('./config/config.js');
 
 
 app.use(bodyParser.urlencoded({
     extended: false
 }));
 app.use(bodyParser.json('application/json'));
-
-var options1 = {
-    key: fs.readFileSync('./httpsCertificates/key.pem', 'utf8'),
-    cert: fs.readFileSync('./httpsCertificates/server.crt', 'utf8')
-};
-
 
 app.use(logger('dev'));
 
@@ -56,7 +50,9 @@ app.use(function (req, res, next) {
 var questionsMod = JSON.stringify(createQuestionsForUser(questions));
 
 fs.writeFile('./public/questions.json', questionsMod, 'utf-8', function (err) {
-    console.log(err);
+    if(err){
+    console.error(err);
+    }
 });
 
 app.use(express.static('public'));
@@ -92,6 +88,10 @@ passport.deserializeUser(function (id, cb) {
     });
 });
 
+app.get('/questions',function(req,res){
+    var data=createQuestionsForUser(questions);
+    res.send(data);
+});
 
 app.get('/', function (req, res) {
     //res.write("Hello"); 
@@ -130,25 +130,15 @@ app.get('/results', require('connect-ensure-login').ensureLoggedIn(), function (
     response.sendFile(__dirname + '/public/results.html');
 
 });
-/*
-
-app.get('/eval',function(req,res){
-//res.sendFile(__dirname + '/public/results.html') ;
-    res.send('check')
-});
-*/
 
 app.post('/eval', function (request, response) {
     //response.writeHead(200);
     var data = request.body;
-    console.log("Reached at point 1");
     var fullArr = fs.readFileSync('db/database.json', function (err, data) {
         if (err) {
             console.log("Database Error");
-            //console.error(err);
         }
     });
-console.log(fullArr);
     fullArr = JSON.parse(fullArr);
     fullArr.push(data);
     fullArr = JSON.stringify(fullArr);

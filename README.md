@@ -2,7 +2,7 @@ Quiz Application
 
 It is quiz application based on Express and Node.js.
 
-Getting Started
+#Getting Started
 git clone repo-name
 cd repo-name
 npm install

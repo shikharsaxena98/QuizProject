@@ -45,14 +45,14 @@ function displayQuestion(quizContainer, questions, alreadyAsked, questionNo) {
 
     alreadyAsked.push(questionNo);
 
-    quizContainer.innerHTML = questions[questionNo].question + '<br/>';
+    quizContainer.innerHTML ='<strong>' + questions[questionNo].question + '</strong><br/>';
 
     for (option in questions[questionNo].answers) {
         quizContainer.innerHTML += '<label>' +
             '<input type="radio" name="question" value="' + option + '">' +
             option + ': ' +
             questions[questionNo].answers[option] +
-            '</label>'
+            '</label>'+"<br/>";
     }
 
 
@@ -61,13 +61,6 @@ function displayQuestion(quizContainer, questions, alreadyAsked, questionNo) {
     // if answer is correct
 
 
-}
-
-function signOut() {
-    var auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
-        console.log('User signed out.');
-    });
 }
 
 function generateRandomNo(alreadyAsked, questions) {
@@ -124,10 +117,11 @@ function move(QuesLen, askedLen, submitButton) {
     //console.log(width);
     if (width >= 100) {
         submitButton.disabled = false;
+        $('#demo').hide();
+        
         submitButton.style.backgroundColor = "green";
         document.getElementById('move').style.display = "none";
         document.getElementById('quiz').innerHTML = "<h1 align='center'>Quiz Completed. SUBMIT THE QUIZ NOW.</h1>";
-        //alert("Quiz Completed");
     }
 
 }
@@ -141,19 +135,20 @@ function captureTime(QuizStartTime, hours, mins, secs) {
 
 function saveToLocalStorage(alreadyAsked, timeArray, ansArray) {
     //Creating the Final Object
-    var finalObj={};
+    var finalObj = {};
     var finalArr = [];
     for (var i = 0; i < alreadyAsked.length; i++) {
-        finalArr.push({"QuestionNo":alreadyAsked[i],
-                        "TimeTaken":timeArray[i],
-                       "UserAnswer":ansArray[i]
-                      });
+        finalArr.push({
+            "QuestionNo": alreadyAsked[i],
+            "TimeTaken": timeArray[i],
+            "UserAnswer": ansArray[i]
+        });
     }
     console.log(finalArr);
     //console.log(UserStatsArr);
 
     //Saving to Local Storage
-    
+
     var dataArr = localStorage.getItem("Users");
     //console.log(dataArr);
     dataArr = JSON.parse(dataArr);
@@ -161,96 +156,93 @@ function saveToLocalStorage(alreadyAsked, timeArray, ansArray) {
     console.log(typeof reqdElm);
     //reqdElm = JSON.parse(reqdElm);
     //console.log(reqdElm);
-    reqdElm["UserStats"] =finalArr;
+    reqdElm["UserStats"] = finalArr;
     //console.log(reqdElm);
     dataArr[dataArr.length - 1] = reqdElm;
     var dataStr = JSON.stringify(dataArr);
     localStorage.setItem("Users", dataStr);
 }
 
-function sendDataForEvaluation(){
-    var data=JSON.parse(localStorage.getItem('Users'));
-    var currData=data[data.length-1];
-    console.log(currData);
-    console.log(JSON.stringify(currData));
-    var sudoObj={UserCredentials:{userName:'Shikhar Saxena',email:'shikharsaxena8@gmail.com'}}
-    
-    
-    var xhr=new XMLHttpRequest();
+function sendDataForEvaluation() {
+    var data = JSON.parse(localStorage.getItem('Users'));
+    var currData = data[data.length - 1];
+
+    currData = JSON.stringify(currData);
+
+    var xhr = new XMLHttpRequest();
     xhr.open("POST", "https://localhost:3000/eval");
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    //xhr.responseType= "document"
     xhr.send(currData);
-    //xhr.responseType="document";
-    xhr.onload=function(){
-        //console.log(xhr.responseText);
-        window.location=JSON.parse(xhr.response).redirectUrl;
+    xhr.onload = function () {
+
+        window.location = JSON.parse(xhr.response).redirectUrl;
     }
-    
+
+}
+
+function getQuestions(questions) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/questions", false);
+    xhr.onload = function () {
+        questions = xhr.responseText;
+    }
 }
 
 window.onload = function () {
     var QuizStartTime = new Date();
     var alreadyAsked = new Array();
-    var myQuestions = [
-        {
-            question: "What is 10/2?",
-            answers: {
-                a: '3',
-                b: '5',
-                c: '115'
-            },
-            correctAnswer: 'b'
-	},
-        {
-            question: "What is 30/3?",
-            answers: {
-                a: '3',
-                b: '5',
-                c: '10'
-            },
-            correctAnswer: 'c'
-	    }
-    ];
-    var questionNo = generateRandomNo(alreadyAsked, myQuestions);
-    var quizContainer = document.getElementById('quiz');
-    var resultsContainer = document.getElementById('results');
-    var submitButton = document.getElementById('submit');
-    var ansObj = {};
-    var timeArray = [];
-    var ansArray = [];
-    var UserStats = {};
+    var xhr = new XMLHttpRequest();
+    $('#successAlert').hide();
 
+    xhr.onload = function () {
+        var myQuestions = xhr.responseText;
+        myQuestions = JSON.parse(myQuestions);
+        var questionNo = generateRandomNo(alreadyAsked, myQuestions);
+        var quizContainer = document.getElementById('quiz');
+        var resultsContainer = document.getElementById('results');
+        var submitButton = document.getElementById('submit');
+        var ansObj = {};
+        var timeArray = [];
+        var ansArray = [];
+        var UserStats = {};
+        submitButton.disabled = true;
 
-    submitButton.disabled = true;
-
-    submitButton.onclick = function () {
-        for (var i = timeArray.length - 1; i >= 1; i--) {
-            timeArray[i] = timeArray[i] - timeArray[i - 1];
+        submitButton.onclick = function () {
+            for (var i = timeArray.length - 1; i >= 1; i--) {
+                timeArray[i] = timeArray[i] - timeArray[i - 1];
+            }
+            
+            saveToLocalStorage(alreadyAsked, timeArray, ansArray);
+            $('#successAlert').show();
+            window.setTimeout(function () {
+                
+                $(".alert").fadeTo(500, 0).slideUp(500, function () {
+                    $(this).remove();
+                });
+                sendDataForEvaluation();
+            }, 4000);
         }
-        saveToLocalStorage(alreadyAsked, timeArray, ansArray);
-        
-        sendDataForEvaluation();
-    }
 
 
-    startExamTimer(1, 0, 0);
+        startExamTimer(1, 0, 0);
 
-    displayQuestion(quizContainer, myQuestions, alreadyAsked, questionNo);
-
-    document.getElementById('move').onclick = function () {
-        ansArray.push(getAnswer(quizContainer, myQuestions));
-        timeArray.push(captureTime(QuizStartTime, 1, 0, 0));
-        //console.log(timeArray);
-
-
-        move(myQuestions.length, alreadyAsked.length, submitButton);
-        //Picking Next Question no.
-        questionNo = generateRandomNo(alreadyAsked, myQuestions);
-        //Displaying the Next Question
         displayQuestion(quizContainer, myQuestions, alreadyAsked, questionNo);
 
-    }
-}//Window.onload END
+        document.getElementById('move').onclick = function () {
+            ansArray.push(getAnswer(quizContainer, myQuestions));
+            timeArray.push(captureTime(QuizStartTime, 1, 0, 0));
+            //console.log(timeArray);
 
 
+            move(myQuestions.length, alreadyAsked.length, submitButton);
+            //Picking Next Question no.
+            questionNo = generateRandomNo(alreadyAsked, myQuestions);
+            //Displaying the Next Question
+            displayQuestion(quizContainer, myQuestions, alreadyAsked, questionNo);
+
+        }
+    };
+    xhr.open("GET", 'https://localhost:3000/questions');
+    xhr.send();
+
+} //Window.onload END

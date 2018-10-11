@@ -6,7 +6,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://apis.google.com/js/platform.js"></script>
     <meta name="google-signin-client_id" content="17507716439-0tkjkd8if9lh5970j08vv0rpf333nbkd.apps.googleusercontent.com">
-
     <script src="frontend.js"></script>
     <!--<script>
         window.onbeforeunload = function() {
@@ -17,12 +16,14 @@
 </head>
 
 <body>
+     
+    
     <p id="demo"></p>
     <div id="startTest">
         <button id="move" class="btn btn-primary">Submit This Answer</button>
-        <br/>
-        <br/>
-        <br/>
+        <br />
+        <br />
+        <br />
         <button id="submit" type="button" class="btn btn-danger">Submit Quiz</button>
     </div>
 
@@ -34,6 +35,12 @@
     <br/>
     <br/>
     <br/>
+    
+    <div class="alert alert-success" role="alert" id="successAlert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Success!</strong> Your test has been submitted. Redirecting now.
+    </div>
+   
 </body>
 
 </html>

@@ -51,7 +51,7 @@ function onSignIn(googleUser) {
     users.push(JSON.stringify(newUser));
     localStorage.setItem("Users", JSON.stringify(users));
     signOut();
-    window.location.href = "https://localhost:3000/quizPage";
+    //window.location.href = "https://localhost:3000/quizPage";
 }
 
 function signOut() {
