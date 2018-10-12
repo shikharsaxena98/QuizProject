@@ -189,7 +189,7 @@ secureServer.listen(httpsPort, function () {
     console.log("Server Running at 3000");
 });
 
-app.get('/getDatabase', function (req, res) {
+app.get('/getDatabase',require('connect-ensure-login').ensureLoggedIn(), function (req, res) {
     var data = fs.readFileSync('db/database.json', 'utf-8');
     res.send(data);
 });
