@@ -214,6 +214,12 @@ window.onload = function () {
             
             saveToLocalStorage(alreadyAsked, timeArray, ansArray);
             $('#successAlert').show();
+            $('#successAlertCloseButton').on('click',function(){
+                $(".alert").fadeTo(500, 0).slideUp(500, function () {
+                    $(this).remove();
+                    sendDataForEvaluation();
+                });
+            })
             window.setTimeout(function () {
                 
                 $(".alert").fadeTo(500, 0).slideUp(500, function () {

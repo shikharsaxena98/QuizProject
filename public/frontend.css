@@ -1,14 +1,19 @@
 
 body {
     padding: 50px;
+    font-family: Helvetica,sans-serif;
+}
+
+.container{
+    background-color: lightblue;
 }
 
 #quiz {
-    background-color: darkgray;
+    background-color: lightblue;
 }
 
 #start {
-    font-family: sans-serif;
+    font-family: Helvetica,sans-serif;
     font-size: 20px;
     background-color: #297;
     color: #fff;

@@ -2,3 +2,4 @@ httpsCertificates/*.pem
 httpsCertificates/*.crt
 node_modules/
 TestEnv
+.idea
