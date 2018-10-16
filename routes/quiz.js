@@ -38,7 +38,6 @@ exports.submitAnswers = function (request, response) {
     if (request.body.UserStats != null) {
         var dataForEval = request.body.UserStats;
         marks = evalMarks(dataForEval, questions);
-        console.log(marks);
     }
 
     response.send({
